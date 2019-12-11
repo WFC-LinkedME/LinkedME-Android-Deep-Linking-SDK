@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.linkPageSdkVersionCode
+        versionName rootProject.ext.linkPageSdkVersion
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+            buildConfigField("String", "SDK_VERSION", "\"${rootProject.ext.linkPageSdkVersion}\"")
+        }
+        release {
+            if (project.hasProperty("release")) {
+                // 如果命令执行任务添加-Prelease参数，则无需将以下false改为true
+                minifyEnabled true
+            } else {
+                // TODO： 创建混淆jar包、arr及上传到jcenter时需要改为true
+                minifyEnabled true
+            }
+            buildConfigField("String", "SDK_VERSION", "\"${rootProject.ext.linkPageSdkVersion}\"")
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+}

@@ -1,0 +1,60 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply from: 'constants.gradle'
+
+install {
+    repositories.mavenInstaller {
+        //以下是生成maven的pom配置文件的相关配置
+        pom.project {
+            name projectName
+            description projectDesc
+            url githubUrl
+            inceptionYear '2016'
+
+            //生成的maven库的相关信息
+            groupId mavenGroup
+            artifactId mavenArtifactId
+            version mavenVersion
+            //生成文件的后缀
+            packaging 'aar'
+            licenses {
+                license {
+                    name licenseName
+                    url licenseUrl
+                    distribution allLicenses
+                }
+            }
+            scm {
+                connection "${githubUrl}.git"
+                url githubUrl
+
+            }
+            //开发者相关信息
+            developers {
+                developer {
+                    id developerId
+                    name developerName
+                    email developerEmail
+                }
+            }
+        }
+    }
+}
+
+//生成源码jar包,有些时候可能不需要打这个源码jar包
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.source
+//    baseName = mavenArtifactId
+//    classifier = 'sources'
+//}
+
+//javadoc task需要在build.gradle中进行声明
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    baseName = mavenArtifactId
+    from javadoc.destinationDir
+}
+
+artifacts {
+//    archives sourcesJar
+    archives javadocJar
+}
